@@ -1,0 +1,57 @@
+.game-details {
+  text-align: center;
+  padding: 20px;
+}
+
+.game-details h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.game-details p {
+  margin: 10px 0;
+  font-size: 1.1em;
+  color: #555;
+}
+
+.notes-form {
+  margin-top: 20px;
+}
+
+.notes-form textarea {
+  width: 100%;
+  max-width: 500px;
+  height: 100px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.notes-form button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.notes-form button:hover {
+  background-color: #0056b3;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.back-link:hover {
+  background-color: #0056b3;
+}
