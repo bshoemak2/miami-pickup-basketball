@@ -1,17 +1,15 @@
 .game-details {
-  text-align: center;
   padding: 20px;
+  text-align: center;
 }
 
 .game-details h2 {
-  color: #333;
-  margin-bottom: 20px;
+  font-size: 2em;
+  color: #555;
 }
 
 .game-details p {
   margin: 10px 0;
-  font-size: 1.1em;
-  color: #555;
 }
 
 .notes-form {
@@ -19,18 +17,15 @@
 }
 
 .notes-form textarea {
-  width: 100%;
-  max-width: 500px;
+  width: 300px;
   height: 100px;
-  padding: 10px;
+  padding: 5px;
   margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1em;
+  resize: vertical;
 }
 
 .notes-form button {
-  padding: 8px 16px;
+  padding: 5px 10px;
   background-color: #007bff;
   color: white;
   border: none;
@@ -42,16 +37,27 @@
   background-color: #0056b3;
 }
 
-.back-link {
+.calendar-link {
   display: inline-block;
-  margin-top: 20px;
-  padding: 8px 16px;
+  margin-top: 10px;
+  padding: 5px 10px;
   background-color: #007bff;
   color: white;
   text-decoration: none;
   border-radius: 5px;
 }
 
-.back-link:hover {
+.calendar-link:hover {
   background-color: #0056b3;
+}
+
+.back-link {
+  display: block;
+  margin-top: 20px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
 }

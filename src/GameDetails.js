@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db, auth } from './firebase';
+import { db, auth, onAuthStateChanged } from './firebase';
 import { useTranslation } from 'react-i18next';
 import './GameDetails.css';
 
@@ -21,6 +21,8 @@ function GameDetails() {
           const gameData = { id: gameDoc.id, ...gameDoc.data() };
           setGame(gameData);
           setNotes(gameData.notes || '');
+        } else {
+          setGame(null);
         }
         setLoading(false);
       } catch (err) {
@@ -30,7 +32,7 @@ function GameDetails() {
     };
     fetchGame();
 
-    const unsubscribe = auth.onAuthStateChanged(currentUser => {
+    const unsubscribe = onAuthStateChanged(auth, currentUser => {
       setUser(currentUser);
     });
     return () => unsubscribe();
@@ -51,20 +53,40 @@ function GameDetails() {
     }
   };
 
+  const createCalendarLink = () => {
+    if (!game || !game.date || !game.time || typeof game.date !== 'string' || typeof game.time !== 'string') {
+      console.log('Invalid date or time in GameDetails:', game);
+      return '#';
+    }
+    try {
+      const startDateTime = new Date(`${game.date}T${game.time}:00`);
+      if (isNaN(startDateTime.getTime())) {
+        console.log('Invalid Date object in GameDetails:', startDateTime);
+        return '#';
+      }
+      const startTime = startDateTime.toISOString().replace(/-|:|\.\d\d\d/g, '');
+      const endTime = new Date(startDateTime.getTime() + 3600000).toISOString().replace(/-|:|\.\d\d\d/g, '');
+      return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(game.title)}&dates=${startTime}/${endTime}&details=${encodeURIComponent('Pickup Basketball Game')}&location=${encodeURIComponent('Miami Beach')}`;
+    } catch (error) {
+      console.error('Error creating calendar link in GameDetails:', error);
+      return '#';
+    }
+  };
+
   if (loading) return <div>{t('loading_games')}</div>;
   if (!game) return <div>{t('game_not_found')}</div>;
 
   return (
     <div className="game-details">
       <h2>{t('game_details')}</h2>
-      <p><strong>{t('date_label', { date: game.date })}</strong></p>
-      <p><strong>{t('time_label', { time: game.time })}</strong></p>
-      <p><strong>{t('skill_label', { skill: game.skill })}</strong></p>
-      <p><strong>{t('creator_label', { creator: game.creator })}</strong></p>
+      <p><strong>{t('date_label')}</strong> {game.date}</p>
+      <p><strong>{t('time_label')}</strong> {game.time}</p>
+      <p><strong>{t('skill_label')}</strong> {game.skill}</p>
+      <p><strong>{t('creator_label')}</strong> {game.creator}</p>
       {game.players && game.players.length > 0 && (
-        <p><strong>{t('players_label', { players: game.players.join(', ') })}</strong></p>
+        <p><strong>{t('players_label')}</strong> {game.players.join(', ')}</p>
       )}
-      <p><strong>{t('notes_label', { notes: game.notes || t('no_notes') })}</strong></p>
+      <p><strong>{t('notes_label')}</strong> {game.notes || t('no_notes')}</p>
       {user && game.creator === user.email && (
         <form onSubmit={handleUpdateNotes} className="notes-form">
           <textarea
@@ -75,6 +97,9 @@ function GameDetails() {
           <button type="submit">{t('update_notes')}</button>
         </form>
       )}
+      <a href={createCalendarLink()} target="_blank" rel="noopener noreferrer" className="calendar-link">
+        {t('add_to_calendar')}
+      </a>
       <Link to="/" className="back-link">{t('back_to_games')}</Link>
     </div>
   );

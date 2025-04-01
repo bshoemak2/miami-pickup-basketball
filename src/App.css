@@ -62,8 +62,20 @@ h1 {
 
 /* Flamingo emoji styling */
 .flamingo {
-  font-size: 4.5rem; /* Increased size to match the title */
+  font-size: 4.5rem; /* Base size matching title */
   animation: bounce 2s infinite; /* Bouncing animation for a playful effect */
+}
+
+.flamingo.bigger {
+  font-size: 6rem; /* Larger size for the flamingo */
+}
+
+/* Beta text styling */
+.beta {
+  font-size: 2rem;
+  color: #ff00ff; /* Neon pink to match theme */
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 /* Bouncing animation for the flamingo */
@@ -83,6 +95,10 @@ h2 {
   color: #555;
   font-size: 1.5em;
   margin-top: 20px;
+}
+
+h2.large-heading {
+  font-size: 2.5em; /* Increased size for "Basketball Gear" and "Upcoming Games" */
 }
 
 ul {
@@ -278,6 +294,60 @@ form button:hover {
   background-color: #218838;
 }
 
+/* Affiliate links styling */
+.affiliate-links {
+  padding: 20px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.product-item {
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-item img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Profile page styling */
+.profile {
+  padding: 20px;
+}
+
+.profile-avatar, .profile-avatar-preview {
+  max-width: 100px;
+  height: auto;
+  margin: 10px 0;
+}
+
+/* New styles for calendar and text links spacing */
+.calendar-link, .text-link {
+  margin-left: 10px; /* Space between calendar and text links */
+}
+
+/* Updated style for affiliate disclosure */
+.affiliate-disclosure {
+  font-size: 1.2em; /* Increased size */
+  color: #666;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Error message styling */
+.error-message {
+  color: #dc3545;
+  font-size: 1em;
+  margin: 10px 0;
+  text-align: center;
+}
+
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {
   h1 {
@@ -288,6 +358,10 @@ form button:hover {
     font-size: 3rem; /* Adjusted flamingo size on mobile */
   }
 
+  .flamingo.bigger {
+    font-size: 4rem; /* Adjusted bigger flamingo size on mobile */
+  }
+
   .title-wrapper {
     gap: 5px; /* Reduce gap on smaller screens */
   }
@@ -295,5 +369,17 @@ form button:hover {
   form button {
     padding: 10px 20px; /* Slightly smaller padding on mobile */
     font-size: 1em; /* Slightly smaller font size on mobile */
+  }
+
+  h2.large-heading {
+    font-size: 2em; /* Slightly smaller on mobile */
+  }
+
+  .affiliate-disclosure {
+    font-size: 1em; /* Slightly smaller on mobile */
+  }
+
+  .beta {
+    font-size: 1.5rem; /* Adjust Beta size on mobile */
   }
 }
