@@ -5,7 +5,7 @@ import { db, auth, onAuthStateChanged } from './firebase';
 import { useTranslation } from 'react-i18next';
 import './GameDetails.css';
 
-function GameDetails() {
+function GameDetails({ theme }) {
   const { t } = useTranslation();
   const { gameId } = useParams();
   const [game, setGame] = useState(null);
@@ -55,13 +55,13 @@ function GameDetails() {
 
   const createCalendarLink = () => {
     if (!game || !game.date || !game.time || typeof game.date !== 'string' || typeof game.time !== 'string') {
-      console.log('Invalid date or time in GameDetails:', game);
+      console.log('Invalid date or time in createCalendarLink (GameDetails):', game);
       return '#';
     }
     try {
       const startDateTime = new Date(`${game.date}T${game.time}:00`);
       if (isNaN(startDateTime.getTime())) {
-        console.log('Invalid Date object in GameDetails:', startDateTime);
+        console.log('Invalid Date object in createCalendarLink (GameDetails):', startDateTime, 'Game:', game);
         return '#';
       }
       const startTime = startDateTime.toISOString().replace(/-|:|\.\d\d\d/g, '');
@@ -73,11 +73,44 @@ function GameDetails() {
     }
   };
 
+  const createICalLink = () => {
+    if (!game || !game.date || !game.time || typeof game.date !== 'string' || typeof game.time !== 'string') {
+      console.log('Invalid date or time in createICalLink (GameDetails):', game);
+      return '#';
+    }
+    try {
+      const startDateTime = new Date(`${game.date}T${game.time}:00`);
+      if (isNaN(startDateTime.getTime())) {
+        console.log('Invalid Date object in createICalLink (GameDetails):', startDateTime, 'Game:', game);
+        return '#';
+      }
+      const start = startDateTime.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      const end = new Date(startDateTime.getTime() + 3600000).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'BEGIN:VEVENT',
+        `SUMMARY:${game.title || 'Untitled Game'}`,
+        `DTSTART:${start}`,
+        `DTEND:${end}`,
+        'DESCRIPTION:Pickup Basketball Game',
+        'LOCATION:Miami Beach',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\n');
+      const blob = new Blob([ics], { type: 'text/calendar' });
+      return URL.createObjectURL(blob);
+    } catch (error) {
+      console.error('Error creating iCal link in GameDetails:', error);
+      return '#';
+    }
+  };
+
   if (loading) return <div>{t('loading_games')}</div>;
   if (!game) return <div>{t('game_not_found')}</div>;
 
   return (
-    <div className="game-details">
+    <div className="game-details" data-theme={theme}>
       <h2>{t('game_details')}</h2>
       <p><strong>{t('date_label')}</strong> {game.date}</p>
       <p><strong>{t('time_label')}</strong> {game.time}</p>
@@ -99,6 +132,9 @@ function GameDetails() {
       )}
       <a href={createCalendarLink()} target="_blank" rel="noopener noreferrer" className="calendar-link">
         {t('add_to_calendar')}
+      </a>
+      <a href={createICalLink()} download={`${game.title || 'Untitled Game'}.ics`} className="ical-link">
+        {t('download_ical')}
       </a>
       <Link to="/" className="back-link">{t('back_to_games')}</Link>
     </div>

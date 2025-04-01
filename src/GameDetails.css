@@ -2,11 +2,14 @@
   padding: 2rem;
   text-align: center;
   box-sizing: border-box;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .game-details h2 {
   font-size: clamp(1.5rem, 6vw, 2em);
-  color: #555;
+  color: var(--text-color);
   margin-bottom: 1rem;
 }
 
@@ -32,11 +35,14 @@
   resize: vertical;
   box-sizing: border-box;
   font-size: clamp(0.8rem, 2.5vw, 1rem);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid #ccc;
 }
 
 .notes-form button {
   padding: clamp(0.3rem, 1.5vw, 0.5rem) clamp(0.6rem, 2vw, 1rem);
-  background-color: #007bff;
+  background-color: var(--button-bg);
   color: white;
   border: none;
   border-radius: 5px;
@@ -45,28 +51,28 @@
 }
 
 .notes-form button:hover {
-  background-color: #0056b3;
+  background-color: var(--button-hover);
 }
 
-.calendar-link {
+.calendar-link, .ical-link {
   display: inline-block;
   margin-top: 1rem;
   padding: clamp(0.3rem, 1.5vw, 0.5rem) clamp(0.6rem, 2vw, 1rem);
-  background-color: #007bff;
+  background-color: var(--button-bg);
   color: white;
   text-decoration: none;
   border-radius: 5px;
   font-size: clamp(0.8rem, 2.5vw, 1rem);
 }
 
-.calendar-link:hover {
-  background-color: #0056b3;
+.calendar-link:hover, .ical-link:hover {
+  background-color: var(--button-hover);
 }
 
 .back-link {
   display: block;
   margin-top: 2rem;
-  color: #007bff;
+  color: var(--link-color);
   text-decoration: none;
   font-size: clamp(0.9rem, 3vw, 1rem);
 }
@@ -85,7 +91,7 @@
     width: 100%;
   }
 
-  .notes-form button, .calendar-link {
+  .notes-form button, .calendar-link, .ical-link {
     width: 100%;
     text-align: center;
   }

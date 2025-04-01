@@ -52,6 +52,7 @@
   "footer_contact": "Contáctanos en",
   "back_to_top": "Volver arriba",
   "add_to_calendar": "Agregar al Calendario",
+  "download_ical": "Descargar iCal",
   "text_to_join": "Recordatorio por texto",
   "profile": "Perfil",
   "username": "Nombre de usuario",
@@ -76,5 +77,10 @@
   "notes_updated_success": "¡Notas actualizadas con éxito!",
   "update_notes": "Actualizar Notas",
   "back_to_games": "Volver a Juegos",
-  "loading_profile": "Cargando perfil..."
+  "loading_profile": "Cargando perfil...",
+  "all_skills": "Todos los Niveles",
+  "beginner": "Principiante",
+  "intermediate": "Intermedio",
+  "advanced": "Avanzado",
+  "error_loading_games": "Error al cargar los juegos, por favor intenta de nuevo más tarde."
 }

@@ -52,6 +52,7 @@
   "footer_contact": "Contact us at",
   "back_to_top": "Back to Top",
   "add_to_calendar": "Add to Calendar",
+  "download_ical": "Download iCal",
   "text_to_join": "Text Reminder",
   "profile": "Profile",
   "username": "Username",
@@ -76,5 +77,10 @@
   "notes_updated_success": "Notes updated successfully!",
   "update_notes": "Update Notes",
   "back_to_games": "Back to Games",
-  "loading_profile": "Loading profile..."
+  "loading_profile": "Loading profile...",
+  "all_skills": "All Skills",
+  "beginner": "Beginner",
+  "intermediate": "Intermediate",
+  "advanced": "Advanced",
+  "error_loading_games": "Error loading games, please try again later."
 }

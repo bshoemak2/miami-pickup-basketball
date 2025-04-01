@@ -4,7 +4,7 @@ import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, setDoc, getDoc 
 import { db, auth, storage, ref, uploadBytes, getDownloadURL, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from './firebase';
 import playersImage from './images/players_1.jpg';
 import { ClipLoader } from 'react-spinners';
-import ErrorBoundary from './ErrorBoundary';
+import ErrorBoundaryWithTranslation from './ErrorBoundary'; // Updated import
 import GameDetails from './GameDetails';
 import { useTranslation } from 'react-i18next';
 import './App.css';
@@ -19,6 +19,8 @@ function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [filter, setFilter] = useState({ skill: '', date: '' });
+  const [theme, setTheme] = useState('light');
 
   const affiliateProducts = [
     { name: 'Spalding Street Performance Outdoor Basketballs', link: 'https://amzn.to/3XGxAyO', image: 'https://m.media-amazon.com/images/I/7187crn3osS._AC_SX679_.jpg' },
@@ -57,7 +59,7 @@ function App() {
             players: players.map(player => player && typeof player === 'string' ? (users[player] || player.split('@')[0]) : 'Unknown Player'),
           };
         });
-        gameList.sort((a, b) => new Date(a.date) - new Date(b.date));
+        gameList.sort((a, b) => new Date(a.date || '1970-01-01') - new Date(b.date || '1970-01-01'));
         console.log('Fetched games:', gameList);
         setGames(gameList);
         setLoading(false);
@@ -102,7 +104,7 @@ function App() {
         await updateDoc(gameRef, { players: updatedPlayers });
         const gameSnapshot = await getDocs(collection(db, 'games'));
         const gameList = gameSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        gameList.sort((a, b) => new Date(a.date) - new Date(b.date));
+        gameList.sort((a, b) => new Date(a.date || '1970-01-01') - new Date(b.date || '1970-01-01'));
         setGames(gameList);
         console.log(`Joined ${game.title} as ${userIdentifier}`);
       }
@@ -121,7 +123,7 @@ function App() {
         await deleteDoc(doc(db, 'games', game.id));
         const gameSnapshot = await getDocs(collection(db, 'games'));
         const gameList = gameSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        gameList.sort((a, b) => new Date(a.date) - new Date(b.date));
+        gameList.sort((a, b) => new Date(a.date || '1970-01-01') - new Date(b.date || '1970-01-01'));
         setGames(gameList);
         console.log(`Deleted ${game.title}`);
       } catch (err) {
@@ -140,7 +142,6 @@ function App() {
       alert(t('fill_required_fields'));
       return;
     }
-    // Validate time format (HH:MM)
     const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
     if (!timeRegex.test(newGame.time)) {
       alert(t('invalid_time_format'));
@@ -151,7 +152,7 @@ function App() {
       setNewGame({ title: '', date: '', time: '', skill: '', notes: '', players: [] });
       const gameSnapshot = await getDocs(collection(db, 'games'));
       const gameList = gameSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      gameList.sort((a, b) => new Date(a.date) - new Date(b.date));
+      gameList.sort((a, b) => new Date(a.date || '1970-01-01') - new Date(b.date || '1970-01-01'));
       setGames(gameList);
     } catch (err) {
       setError('Failed to add game: ' + err.message);
@@ -159,14 +160,14 @@ function App() {
   };
 
   const createCalendarLink = (game) => {
-    if (!game.date || !game.time || typeof game.date !== 'string' || typeof game.time !== 'string') {
-      console.log('Invalid date or time in App:', game);
+    if (!game || !game.date || !game.time || typeof game.date !== 'string' || typeof game.time !== 'string') {
+      console.log('Invalid date or time in createCalendarLink:', game);
       return '#';
     }
     try {
       const startDateTime = new Date(`${game.date}T${game.time}:00`);
       if (isNaN(startDateTime.getTime())) {
-        console.log('Invalid Date object in App:', startDateTime);
+        console.log('Invalid Date object in createCalendarLink:', startDateTime, 'Game:', game);
         return '#';
       }
       const startTime = startDateTime.toISOString().replace(/-|:|\.\d\d\d/g, '');
@@ -174,6 +175,39 @@ function App() {
       return `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(game.title)}&dates=${startTime}/${endTime}&details=${encodeURIComponent('Pickup Basketball Game')}&location=${encodeURIComponent('Miami Beach')}`;
     } catch (error) {
       console.error('Error creating calendar link in App:', error);
+      return '#';
+    }
+  };
+
+  const createICalLink = (game) => {
+    if (!game || !game.date || !game.time || typeof game.date !== 'string' || typeof game.time !== 'string') {
+      console.log('Invalid date or time in createICalLink:', game);
+      return '#';
+    }
+    try {
+      const startDateTime = new Date(`${game.date}T${game.time}:00`);
+      if (isNaN(startDateTime.getTime())) {
+        console.log('Invalid Date object in createICalLink:', startDateTime, 'Game:', game);
+        return '#';
+      }
+      const start = startDateTime.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      const end = new Date(startDateTime.getTime() + 3600000).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'BEGIN:VEVENT',
+        `SUMMARY:${game.title || 'Untitled Game'}`,
+        `DTSTART:${start}`,
+        `DTEND:${end}`,
+        'DESCRIPTION:Pickup Basketball Game',
+        'LOCATION:Miami Beach',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\n');
+      const blob = new Blob([ics], { type: 'text/calendar' });
+      return URL.createObjectURL(blob);
+    } catch (error) {
+      console.error('Error creating iCal link in App:', error);
       return '#';
     }
   };
@@ -214,7 +248,7 @@ function App() {
       await signInWithEmailAndPassword(auth, email, password);
       setEmail('');
       setPassword('');
-      setError(null); // Clear any previous errors on success
+      setError(null);
     } catch (err) {
       if (err.code === 'auth/invalid-email') {
         setError(t('invalid_email'));
@@ -238,7 +272,7 @@ function App() {
       await createUserWithEmailAndPassword(auth, email, password);
       setEmail('');
       setPassword('');
-      setError(null); // Clear any previous errors on success
+      setError(null);
     } catch (err) {
       if (err.code === 'auth/email-already-in-use') {
         setError(t('email_already_registered'));
@@ -269,30 +303,44 @@ function App() {
     i18n.changeLanguage(newLang);
   };
 
+  const toggleTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
+
+  const filteredGames = games.filter(game => 
+    (!filter.skill || game.skill === filter.skill) &&
+    (!filter.date || game.date === filter.date)
+  );
+
   if (loading) return (
     <div className="loading-spinner">
       <ClipLoader color="#007bff" loading={loading} size={50} />
       <p>{t('loading_games')}</p>
     </div>
   );
-  if (error && user) return <div>{error}</div>; // Only show error post-login if user is logged in
+  if (error && user) return <div>{error}</div>;
 
   return (
     <Router>
-      <ErrorBoundary>
+      <ErrorBoundaryWithTranslation> {/* Existing top-level error boundary */}
         <Routes>
           <Route
             path="/"
             element={
-              <div className="App">
+              <div className="App" data-theme={theme}>
                 <div className="title-wrapper">
                   <h1>{t('app_title')}</h1>
                   <span className="flamingo bigger">🦩</span>
                   <span className="beta">Beta</span>
                 </div>
-                <button onClick={toggleLanguage} className="language-toggle">
-                  Switch to {i18n.language === 'en' ? 'Spanish' : 'English'}
-                </button>
+                <div className="header-controls">
+                  <button onClick={toggleLanguage} className="language-toggle">
+                    Switch to {i18n.language === 'en' ? 'Spanish' : 'English'}
+                  </button>
+                  <button onClick={toggleTheme} className="theme-toggle">
+                    {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+                  </button>
+                </div>
                 {!user ? (
                   <div>
                     {error && <p className="error-message">{error}</p>}
@@ -322,35 +370,51 @@ function App() {
                   </div>
                 )}
                 <h2 className="large-heading">{t('upcoming_games')}</h2>
-                {games.length === 0 ? (
-                  <p>{t('no_games', { message: user ? t('add_some') : t('check_later') })}</p>
-                ) : (
-                  <ul>
-                    {games.map(game => (
-                      <li key={game.id} className="game-row">
-                        <Link to={`/game/${game.id}`} className="game-link">
-                          {game.title} - {game.date} at {game.time} ({game.skill})
-                        </Link>
-                        {user && game.players && game.players.includes(user.displayName || user.email.split('@')[0]) ? (
-                          <span className="joined-label">{t('joined')}</span>
-                        ) : (
-                          <button onClick={() => handleJoin(game)}>{t('join')}</button>
-                        )}
-                        <a href={createCalendarLink(game)} target="_blank" rel="noopener noreferrer" className="calendar-link">{t('add_to_calendar')}</a>
-                        <a href={`sms:?body=Reminder: ${game.title} on ${game.date} at ${game.time}`} className="text-link">{t('text_to_join')}</a>
-                        <button onClick={() => handleShareX(game)}>{t('X')}</button>
-                        <button onClick={() => handleShareTikTok(game)}>{t('TikTok')}</button>
-                        <button onClick={() => handleShareInstagram(game)}>{t('Instagram')}</button>
-                        {user && game.creator === user.email && (
-                          <button onClick={() => handleDeleteGame(game)} className="delete-button">{t('delete')}</button>
-                        )}
-                        {game.players && game.players.length > 0 && (
-                          <span>Players: {game.players.join(', ')}</span>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                <div className="filter-controls">
+                  <select onChange={(e) => setFilter({ ...filter, skill: e.target.value })} value={filter.skill}>
+                    <option value="">{t('all_skills')}</option>
+                    <option value="Beginner">{t('beginner')}</option>
+                    <option value="Intermediate">{t('intermediate')}</option>
+                    <option value="Advanced">{t('advanced')}</option>
+                  </select>
+                  <input
+                    type="date"
+                    value={filter.date}
+                    onChange={(e) => setFilter({ ...filter, date: e.target.value })}
+                  />
+                </div>
+                <ErrorBoundaryWithTranslation> {/* Wrap game list with error boundary */}
+                  {filteredGames.length === 0 ? (
+                    <p>{t('no_games', { message: user ? t('add_some') : t('check_later') })}</p>
+                  ) : (
+                    <ul>
+                      {filteredGames.map(game => (
+                        <li key={game.id} className="game-row">
+                          <Link to={`/game/${game.id}`} className="game-link">
+                            {game.title} - {game.date} at {game.time} ({game.skill})
+                          </Link>
+                          {user && game.players && game.players.includes(user.displayName || user.email.split('@')[0]) ? (
+                            <span className="joined-label">{t('joined')}</span>
+                          ) : (
+                            <button onClick={() => handleJoin(game)}>{t('join')}</button>
+                          )}
+                          <a href={createCalendarLink(game)} target="_blank" rel="noopener noreferrer" className="calendar-link">{t('add_to_calendar')}</a>
+                          <a href={createICalLink(game)} download={`${game.title || 'Untitled Game'}.ics`} className="ical-link">{t('download_ical')}</a>
+                          <a href={`sms:?body=Reminder: ${game.title} on ${game.date} at ${game.time}`} className="text-link">{t('text_to_join')}</a>
+                          <button onClick={() => handleShareX(game)}>{t('X')}</button>
+                          <button onClick={() => handleShareTikTok(game)}>{t('TikTok')}</button>
+                          <button onClick={() => handleShareInstagram(game)}>{t('Instagram')}</button>
+                          {user && game.creator === user.email && (
+                            <button onClick={() => handleDeleteGame(game)} className="delete-button">{t('delete')}</button>
+                          )}
+                          {game.players && game.players.length > 0 && (
+                            <span>Players: {game.players.join(', ')}</span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </ErrorBoundaryWithTranslation>
                 {user && (
                   <form onSubmit={handleCreateGame}>
                     <input
@@ -420,15 +484,15 @@ function App() {
               </div>
             }
           />
-          <Route path="/game/:gameId" element={<GameDetails />} />
-          <Route path="/profile" element={<Profile user={user} />} />
+          <Route path="/game/:gameId" element={<GameDetails theme={theme} />} />
+          <Route path="/profile" element={<Profile user={user} theme={theme} />} />
         </Routes>
-      </ErrorBoundary>
+      </ErrorBoundaryWithTranslation>
     </Router>
   );
 }
 
-function Profile({ user }) {
+function Profile({ user, theme }) {
   const { t } = useTranslation();
   const [phone, setPhone] = useState('');
   const [avatar, setAvatar] = useState(null);
@@ -473,7 +537,7 @@ function Profile({ user }) {
       };
       await setDoc(userRef, userData, { merge: true });
       setAvatarUrl(avatarUrlToSave);
-      setAvatar(null); // Clear the file input
+      setAvatar(null);
       alert(t('profile_updated'));
     } catch (err) {
       console.error('Error saving profile:', err);
@@ -484,7 +548,7 @@ function Profile({ user }) {
   if (loading) return <div>{t('loading_profile')}</div>;
 
   return (
-    <div className="profile">
+    <div className="profile" data-theme={theme}>
       <h2>{t('profile')}</h2>
       <p>{t('username')}: {user.displayName || user.email.split('@')[0]}</p>
       <p>{t('phone_label')}: {phone || 'Not set'}</p>
