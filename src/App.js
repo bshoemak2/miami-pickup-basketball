@@ -3,8 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, setDoc, getDoc } from 'firebase/firestore';
 import { db, auth, storage, ref, uploadBytes, getDownloadURL, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from './firebase';
 import playersImage from './images/players_1.jpg';
+import altMiamiImage from './images/alt_miami_image2.jpg'; // Import the new image
 import { ClipLoader } from 'react-spinners';
-import ErrorBoundaryWithTranslation from './ErrorBoundary'; // Updated import
+import ErrorBoundaryWithTranslation from './ErrorBoundary';
 import GameDetails from './GameDetails';
 import { useTranslation } from 'react-i18next';
 import './App.css';
@@ -322,7 +323,7 @@ function App() {
 
   return (
     <Router>
-      <ErrorBoundaryWithTranslation> {/* Existing top-level error boundary */}
+      <ErrorBoundaryWithTranslation>
         <Routes>
           <Route
             path="/"
@@ -383,7 +384,7 @@ function App() {
                     onChange={(e) => setFilter({ ...filter, date: e.target.value })}
                   />
                 </div>
-                <ErrorBoundaryWithTranslation> {/* Wrap game list with error boundary */}
+                <ErrorBoundaryWithTranslation>
                   {filteredGames.length === 0 ? (
                     <p>{t('no_games', { message: user ? t('add_some') : t('check_later') })}</p>
                   ) : (
@@ -468,6 +469,8 @@ function App() {
                   </div>
                   <p className="affiliate-disclosure">{t('affiliate_disclosure')}</p>
                 </div>
+                {/* Add the new image here */}
+                <img src={altMiamiImage} alt="Miami basketball court at sunset" className="alt-miami-image" loading="lazy" />
                 <p className="sponsored-by-large">
                   {t('sponsor_text')}{' '}
                   <a href="https://shopping-assistant-5m0q.onrender.com/" target="_blank" rel="noopener noreferrer">
