@@ -1,6 +1,8 @@
 .App {
   text-align: center;
-  padding: 20px;
+  padding: 2vw; /* Scale padding with viewport width */
+  min-height: 100vh; /* Ensure full height on mobile */
+  box-sizing: border-box;
 }
 
 .loading-spinner {
@@ -12,15 +14,16 @@
 }
 
 .loading-spinner p {
-  margin-top: 10px;
+  margin-top: 1rem;
   color: #555;
+  font-size: clamp(0.8rem, 2vw, 1rem); /* Responsive font size */
 }
 
 .footer-image {
-  width: 80%;
-  max-width: 1200px;
+  width: 100%; /* Full width on mobile */
+  max-width: 100vw; /* No overflow */
   height: auto;
-  margin-top: 20px;
+  margin-top: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -28,52 +31,50 @@
 /* Wrapper for the title and flamingo */
 .title-wrapper {
   display: flex;
+  flex-wrap: wrap; /* Wrap on small screens */
   align-items: center;
   justify-content: center;
-  gap: 10px; /* Space between title and flamingo */
-  margin-bottom: 20px;
+  gap: 1vw; /* Responsive gap */
+  margin-bottom: 2rem;
 }
 
 h1 {
-  font-size: 4.5rem; /* Large font size */
-  font-family: 'Impact', 'Arial Black', sans-serif; /* Bold, impactful font */
-  background: linear-gradient(45deg, #ff00ff, #00ffcc); /* Neon pink to teal gradient */
-  -webkit-background-clip: text; /* Apply gradient to text */
-  -webkit-text-fill-color: transparent; /* Make text fill transparent to show gradient */
-  text-shadow: 2px 2px 4px rgba(255, 0, 255, 0.4), /* Sharper pink shadow */
-               -2px -2px 4px rgba(0, 255, 204, 0.4); /* Sharper teal shadow */
-  letter-spacing: 2px; /* Slight spacing for emphasis */
-  text-transform: uppercase; /* All caps for boldness */
-  animation: neonGlow 1.5s ease-in-out infinite alternate; /* Subtle glow animation */
-  margin: 0; /* Remove default margin to align with flamingo */
+  font-size: clamp(2rem, 8vw, 4.5rem); /* Scale between 2rem and 4.5rem */
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  background: linear-gradient(45deg, #ff00ff, #00ffcc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 4px rgba(255, 0, 255, 0.4), -2px -2px 4px rgba(0, 255, 204, 0.4);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: neonGlow 1.5s ease-in-out infinite alternate;
+  margin: 0;
 }
 
 /* Neon glow animation */
 @keyframes neonGlow {
   from {
-    text-shadow: 2px 2px 4px rgba(255, 0, 255, 0.4),
-                 -2px -2px 4px rgba(0, 255, 204, 0.4);
+    text-shadow: 2px 2px 4px rgba(255, 0, 255, 0.4), -2px -2px 4px rgba(0, 255, 204, 0.4);
   }
   to {
-    text-shadow: 2px 2px 6px rgba(255, 0, 255, 0.6),
-                 -2px -2px 6px rgba(0, 255, 204, 0.6);
+    text-shadow: 2px 2px 6px rgba(255, 0, 255, 0.6), -2px -2px 6px rgba(0, 255, 204, 0.6);
   }
 }
 
 /* Flamingo emoji styling */
 .flamingo {
-  font-size: 4.5rem; /* Base size matching title */
-  animation: bounce 2s infinite; /* Bouncing animation for a playful effect */
+  font-size: clamp(2rem, 8vw, 4.5rem); /* Scale with title */
+  animation: bounce 2s infinite;
 }
 
 .flamingo.bigger {
-  font-size: 6rem; /* Larger size for the flamingo */
+  font-size: clamp(3rem, 10vw, 6rem); /* Larger but scaled */
 }
 
 /* Beta text styling */
 .beta {
-  font-size: 2rem;
-  color: #ff00ff; /* Neon pink to match theme */
+  font-size: clamp(1rem, 4vw, 2rem); /* Scale with viewport */
+  color: #ff00ff;
   font-weight: bold;
   text-transform: uppercase;
 }
@@ -93,29 +94,32 @@ h1 {
 
 h2 {
   color: #555;
-  font-size: 1.5em;
-  margin-top: 20px;
+  font-size: clamp(1rem, 4vw, 1.5em);
+  margin-top: 2rem;
 }
 
 h2.large-heading {
-  font-size: 2.5em; /* Increased size for "Basketball Gear" and "Upcoming Games" */
+  font-size: clamp(1.5rem, 6vw, 2.5em); /* Scale headings */
 }
 
 ul {
   list-style-type: none;
   padding: 0;
+  width: 100%; /* Full width on mobile */
 }
 
 li.game-row {
-  margin: 10px 0;
+  margin: 1rem 0;
   display: flex;
+  flex-wrap: wrap; /* Wrap buttons on small screens */
   justify-content: space-between;
   align-items: center;
-  max-width: 800px;
+  max-width: 100%; /* Fit screen width */
   margin-left: auto;
   margin-right: auto;
-  padding-bottom: 10px;
+  padding-bottom: 1rem;
   border-bottom: 1px solid #ddd;
+  gap: 0.5rem; /* Add spacing between wrapped items */
 }
 
 .game-link {
@@ -123,6 +127,7 @@ li.game-row {
   text-decoration: none;
   flex: 1;
   text-align: left;
+  font-size: clamp(0.9rem, 3vw, 1rem); /* Responsive text */
 }
 
 .game-link:hover {
@@ -130,22 +135,23 @@ li.game-row {
 }
 
 .joined-label {
-  margin-left: 10px;
-  padding: 5px 10px;
+  margin-left: 0.5rem;
+  padding: 0.3rem 0.6rem;
   background-color: #28a745;
   color: white;
   border-radius: 5px;
-  font-size: 0.9em;
+  font-size: clamp(0.7rem, 2.5vw, 0.9em);
 }
 
 button {
-  margin-left: 10px;
-  padding: 5px 10px;
+  margin-left: 0.5rem;
+  padding: 0.3rem 0.6rem; /* Smaller padding for mobile */
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-size: clamp(0.8rem, 2.5vw, 1rem); /* Responsive font */
 }
 
 button:hover {
@@ -185,13 +191,20 @@ li button:nth-child(4):hover {
 }
 
 form {
-  margin-top: 20px;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem; /* Responsive spacing */
 }
 
 input, textarea {
-  margin: 5px;
-  padding: 5px;
-  width: 200px;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  width: 90%; /* Scale with screen width */
+  max-width: 300px; /* Cap width */
+  box-sizing: border-box;
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
 }
 
 textarea {
@@ -201,26 +214,27 @@ textarea {
 
 form button {
   margin-left: 0;
-  padding: 12px 24px; /* Larger padding for a bigger button */
-  background-color: #ff00ff; /* Neon pink to match the Miami vibe */
+  padding: clamp(0.5rem, 2vw, 1rem) clamp(1rem, 4vw, 2rem); /* Responsive padding */
+  background-color: #ff00ff;
   color: white;
   border: none;
-  border-radius: 8px; /* Slightly larger border radius */
-  font-size: 1.2em; /* Larger font size */
-  font-weight: bold; /* Bold text for emphasis */
+  border-radius: 8px;
+  font-size: clamp(0.9rem, 3vw, 1.2em);
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 form button:hover {
-  background-color: #e600e6; /* Slightly darker neon pink on hover */
-  transform: scale(1.05); /* Slight scale-up effect on hover */
+  background-color: #e600e6;
+  transform: scale(1.05);
 }
 
 .ad-placeholder {
-  margin: 20px auto;
-  width: 728px;
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 728px;
   height: 90px;
   background-color: #f0f0f0;
   line-height: 90px;
@@ -229,8 +243,8 @@ form button:hover {
 }
 
 .sponsored-by-large {
-  margin-top: 20px;
-  font-size: 1.5em;
+  margin-top: 2rem;
+  font-size: clamp(1rem, 4vw, 1.5em);
   font-weight: bold;
   color: #333;
 }
@@ -245,10 +259,10 @@ form button:hover {
 }
 
 .app-footer {
-  margin-top: 20px;
-  padding: 10px 0;
+  margin-top: 2rem;
+  padding: 1rem 0;
   border-top: 1px solid #ddd;
-  font-size: 0.8em;
+  font-size: clamp(0.7rem, 2vw, 0.8em);
   color: #555;
 }
 
@@ -263,15 +277,16 @@ form button:hover {
 
 .back-to-top {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 15px;
+  bottom: 2rem;
+  right: 2rem;
+  padding: clamp(0.5rem, 2vw, 1rem);
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
 }
 
 .back-to-top:hover {
@@ -279,14 +294,14 @@ form button:hover {
 }
 
 .language-toggle {
-  margin: 10px 0;
-  padding: 8px 16px;
+  margin: 1rem 0;
+  padding: clamp(0.4rem, 1.5vw, 0.8rem) clamp(0.8rem, 3vw, 1rem);
   background-color: #28a745;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1em;
+  font-size: clamp(0.8rem, 2.5vw, 1em);
   transition: background-color 0.3s;
 }
 
@@ -296,13 +311,13 @@ form button:hover {
 
 /* Affiliate links styling */
 .affiliate-links {
-  padding: 20px;
+  padding: 2rem;
 }
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Smaller min width for mobile */
+  gap: clamp(1rem, 3vw, 2rem); /* Responsive gap */
 }
 
 .product-item {
@@ -312,74 +327,73 @@ form button:hover {
 }
 
 .product-item img {
-  max-width: 100%;
+  width: 100%;
   height: auto;
+}
+
+.product-item p {
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
 }
 
 /* Profile page styling */
 .profile {
-  padding: 20px;
+  padding: 2rem;
 }
 
 .profile-avatar, .profile-avatar-preview {
+  width: 100%;
   max-width: 100px;
   height: auto;
-  margin: 10px 0;
+  margin: 1rem 0;
 }
 
 /* New styles for calendar and text links spacing */
 .calendar-link, .text-link {
-  margin-left: 10px; /* Space between calendar and text links */
+  margin-left: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
 }
 
 /* Updated style for affiliate disclosure */
 .affiliate-disclosure {
-  font-size: 1.2em; /* Increased size */
+  font-size: clamp(0.9rem, 3vw, 1.2em);
   color: #666;
-  margin-top: 10px;
+  margin-top: 1rem;
   text-align: center;
 }
 
 /* Error message styling */
 .error-message {
   color: #dc3545;
-  font-size: 1em;
-  margin: 10px 0;
+  font-size: clamp(0.8rem, 2.5vw, 1em);
+  margin: 1rem 0;
   text-align: center;
 }
 
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {
-  h1 {
-    font-size: 3rem; /* Smaller font size on mobile */
-  }
-
-  .flamingo {
-    font-size: 3rem; /* Adjusted flamingo size on mobile */
-  }
-
-  .flamingo.bigger {
-    font-size: 4rem; /* Adjusted bigger flamingo size on mobile */
-  }
-
   .title-wrapper {
-    gap: 5px; /* Reduce gap on smaller screens */
+    flex-direction: column; /* Stack title, flamingo, beta vertically */
+    gap: 0.5rem;
   }
 
-  form button {
-    padding: 10px 20px; /* Slightly smaller padding on mobile */
-    font-size: 1em; /* Slightly smaller font size on mobile */
+  li.game-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
 
-  h2.large-heading {
-    font-size: 2em; /* Slightly smaller on mobile */
+  button, .calendar-link, .text-link {
+    margin-left: 0; /* Reset margin for stacked layout */
+    width: 100%; /* Full width buttons on mobile */
+    text-align: center;
   }
 
-  .affiliate-disclosure {
-    font-size: 1em; /* Slightly smaller on mobile */
+  form input, form textarea {
+    width: 100%; /* Full width inputs */
   }
 
-  .beta {
-    font-size: 1.5rem; /* Adjust Beta size on mobile */
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Even smaller for very small screens */
   }
 }
