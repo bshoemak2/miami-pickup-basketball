@@ -123,15 +123,20 @@ li.game-row {
 }
 
 .game-link {
-  color: #007bff;
+  color: #004085; /* Darker blue for better contrast */
   text-decoration: none;
   flex: 1;
   text-align: left;
-  font-size: clamp(0.9rem, 3vw, 1rem); /* Responsive text */
+  font-size: clamp(1rem, 4vw, 1.5rem); /* Bigger titles */
+  font-weight: 700; /* Bolder */
+  letter-spacing: 0.5px; /* Improved clarity */
+  line-height: 1.2; /* Better readability */
+  padding: 0.5rem 0; /* Extra space */
 }
 
 .game-link:hover {
   text-decoration: underline;
+  color: #002752; /* Slightly darker on hover */
 }
 
 .joined-label {
