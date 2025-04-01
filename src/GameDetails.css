@@ -18,6 +18,26 @@
   font-size: clamp(0.9rem, 3vw, 1rem);
 }
 
+.players-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.player-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.player-avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .notes-form {
   margin-top: 2rem;
   display: flex;

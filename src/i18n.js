@@ -14,8 +14,15 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
+    lng: 'en', // Explicitly set initial language
     fallbackLng: 'en',
-    interpolation: { escapeValue: false },
+    debug: true, // Enable debug logs for i18n
+    interpolation: {
+      escapeValue: false, // React handles escaping
+    },
+    react: {
+      wait: true, // Wait for translations to load
+    },
   });
 
 export default i18n;
